@@ -1,0 +1,63 @@
+Java基础
+    Java的泛型是伪泛型，这是因为Java在编译期间，所有的泛型信息都会被擦掉，这也就是通常所说类型擦除 。
+    List<Integer> list = new ArrayList<>();
+    list.add(12);
+    // 这里直接添加会报错
+    list.add("a");
+    Class<? extends List> clazz = list.getClass();
+    Method add = clazz.getDeclaredMethod("add", Object.class);
+    // 但是通过反射添加，是可以的
+    add.invoke(list, "kl");
+
+    调用子类->父类的特定构造方法-->（如果没有找到）父类的无参构造方法-->子类的构造方法->初始化
+
+    #多线程操作字符串缓冲区下操作大量数据: 适用 StringBuffer
+
+    public final native void notify()//native方法，并且不能重写。
+        唤醒一个在此对象监视器上等待的线程(监视器相当于就是锁的概念)。如果有多个线程在等待只会任意唤醒一个。
+    public final native void notifyAll()//native方法，并且不能重写。
+        跟notify一样，唯一的区别就是会唤醒在此对象监视器上等待的所有线程，而不是一个线程。
+    public final native void wait(long timeout) throws InterruptedException//native方法，并且不能重写。
+        暂停线程的执行。注意：sleep方法没有释放锁，而wait方法释放了锁 。timeout是等待时间。
+    public final void wait(long timeout, int nanos) throws InterruptedException//多了nanos参数，
+        这个参数表示额外时间（以毫微秒为单位，范围是 0-999999）。 所以超时的时间还需要加上nanos毫秒。
+    public final void wait() throws InterruptedException//跟之前的2个wait方法一样，只不过该方法一直等待，
+        没有超时时间这个概念
+    protected void finalize() throws Throwable { }//实例被垃圾回收器回收的时候触发的操作
+
+    获取用键盘输入常用的两种方法
+    方法 1：通过 Scanner
+    方法 2：通过 BufferedReader
+
+BIO,NIO,AIO 有什么区别?
+BIO (Blocking I/O): 同步阻塞 I/O 模式，数据的读取写入必须阻塞在一个线程内等待其完成。
+        在活动连接数不是特别高（小于单机 1000）的情况下，这种模型是比较不错的，可以让每一个连接专注于自己的 I/O 并且编程模型简单，
+        也不用过多考虑系统的过载、限流等问题。线程池本身就是一个天然的漏斗，可以缓冲一些系统处理不了的连接或请求。
+        但是，当面对十万甚至百万级连接的时候，传统的 BIO 模型是无能为力的。
+        因此，我们需要一种更高效的 I/O 处理模型来应对更高的并发量。
+NIO (Non-blocking/New I/O): NIO 是一种同步非阻塞的 I/O 模型，在 Java 1.4 中引入了 NIO 框架，对应 java.nio 包，
+        提供了 Channel , Selector，Buffer 等抽象。NIO 中的 N 可以理解为 Non-blocking，不单纯是 New。它支持面向缓冲的，
+        基于通道的 I/O 操作方法。 NIO 提供了与传统 BIO 模型中的 Socket 和 ServerSocket 相对应的 SocketChannel
+        和 ServerSocketChannel 两种不同的套接字通道实现,两种通道都支持阻塞和非阻塞两种模式。阻塞模式使用就像传统中的支持一样，
+        比较简单，但是性能和可靠性都不好；非阻塞模式正好与之相反。对于低负载、低并发的应用程序，
+        可以使用同步阻塞 I/O 来提升开发速率和更好的维护性；对于高负载、高并发的（网络）应用，应使用 NIO 的非阻塞模式来开发
+AIO (Asynchronous I/O): AIO 也就是 NIO 2。在 Java 7 中引入了 NIO 的改进版 NIO 2,它是异步非阻塞的 IO 模型。
+        异步 IO 是基于事件和回调机制实现的，也就是应用操作之后会直接返回，不会堵塞在那里，
+        当后台处理完成，操作系统会通知相应的线程进行后续的操作。AIO 是异步 IO 的缩写，
+        虽然 NIO 在网络操作中，提供了非阻塞的方法，但是 NIO 的 IO 行为还是同步的。对于 NIO 来说，
+        我们的业务线程是在 IO 操作准备好时，得到通知，接着就由这个线程自行进行 IO 操作，IO 操作本身是同步的。
+        查阅网上相关资料，我发现就目前来说 AIO 的应用还不是很广泛，Netty 之前也尝试使用过 AIO，不过又放弃了。
+
+        Objects.equals(null,"SnailClimb");
+
+        数组和list的转换
+        @最简便的方法(推荐)
+        List list = new ArrayList<>(Arrays.asList("a", "b", "c"))
+        @使用 Java8 的Stream(推荐)
+        Integer [] myArray = { 1, 2, 3 };
+        List myList = Arrays.stream(myArray).collect(Collectors.toList());
+        //基本类型也可以实现转换（依赖boxed的装箱操作）
+        int [] myArray2 = { 1, 2, 3 };
+        List myList = Arrays.stream(myArray2).boxed().collect(Collectors.toList());
+
+conllection.resverse()
