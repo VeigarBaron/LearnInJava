@@ -1,15 +1,14 @@
-package LeetCode;
+package leetcode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
- * @Description:
- * @Author: huoPing
+ * @Author: VeigarBaron
  * @Date: Create in 2020/7/14  11:59
+ * @Description:
  */
-public class 三角形最小路径和 {
+public class 三角形最小路径和120 {
     public int minimumTotal(List<List<Integer>> triangle) {
         int n = triangle.size();
         int[][] f = new int[n][n];
@@ -28,7 +27,7 @@ public class 三角形最小路径和 {
         return minTotal;
     }
     public static void main(String[] args) {
-        三角形最小路径和 test = new 三角形最小路径和();
+        三角形最小路径和120 test = new 三角形最小路径和120();
         List list = new ArrayList();
         List list1 = new ArrayList();
         list1.add(-1);

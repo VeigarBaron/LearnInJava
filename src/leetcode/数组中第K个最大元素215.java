@@ -1,10 +1,10 @@
-package LeetCode;
+package leetcode;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 /**
+ * @Author: VeigarBaron
+ * @Date: Create in 2020/6/29  9:19
  * @Description:
  * 在未排序的数组中找到第 k 个最大的元素。请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。
     示例 1:                                                    示例 2:
@@ -13,10 +13,8 @@ import java.util.Random;
 
     说明:
     你可以假设 k 总是有效的，且 1 ≤ k ≤ 数组的长度。
- * @Author: huoPing
- * @Date: Create in 2020/6/29  9:19
  *  我们可以用快速排序来解决这个问题，先对原数组排序，再返回倒数第 kk 个位置，这样平均时间复杂度是 O(n \log n)O(nlogn)，但其实我们可以做的更快。
-
+    -----解释：
     首先我们来回顾一下快速排序，这是一个典型的分治算法。我们对数组 a[l \cdots r]a[l⋯r] 做快速排序的过程是（参考《算法导论》）：
 
     分解： 将数组 a[l \cdots r]a[l⋯r] 「划分」成两个子数组 a[l \cdots q - 1]a[l⋯q−1]、a[q + 1 \cdots r]a[q+1⋯r]，使得 a[l \cdots q - 1]a[l⋯q−1] 中的每个元素小于等于 a[q]a[q]，且 a[q]a[q] 小于等于 a[q + 1 \cdots r]a[q+1⋯r] 中的每个元素。其中，计算下标 qq 也是「划分」过程的一部分。
