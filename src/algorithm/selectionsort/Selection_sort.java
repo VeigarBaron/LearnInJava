@@ -1,4 +1,4 @@
-package algorithm;
+package algorithm.selectionsort;
 
 /**
  * 简单选择排序

@@ -1,4 +1,4 @@
-package algorithm;
+package algorithm.insertionsort;
 
 /**
  * 插入排序 ： 当对位置 i 处的元素进行排序时，数组[0,i-1]上的元素一定是已经有序的了。
