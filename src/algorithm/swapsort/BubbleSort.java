@@ -24,14 +24,6 @@ public class BubbleSort {
             }
             if (!bChange)
                 break;
-            System.out.println("第 " + i + " 趟" + ":");
-            for (int anArr : list) {
-                System.out.print(anArr + " ");
-            }
-        }
-        System.out.println("最终：");
-        for (int anArr : list) {
-            System.out.print( anArr + " ");
         }
     }
 }

@@ -1,0 +1,68 @@
+java1.7: HashMap
+    容量；阈值；加载因子；entry(K,V,HCode,Next)
+    头插法；链表并发情况下环形并丢失数据；
+    hashcode();9次扰动计算位置
+java1.8: HashMap
+    容量；阈值；加载因子；Node(K,V,HCode,Next);TreeNode(parent,left,right,prev,red)
+    链表转红黑树默认8，树转链表（缩容）为6，
+    尾插法；链表转树并发情况一样会出现cpu打满；
+    hashcode();2次扰动&（数组.length - 1）
+
+==>>  ConCurrentHashMap
+<jdk1.7>：数组（Segment） + 数组（HashEntry） + 链表（HashEntry节点）
+ -- 底层一个Segments数组，存储一个Segments对象，一个Segments中储存一个Entry数组，存储的每个Entry对象又是一个链表头结点。
+get（）：                                            put（）：
+1、第一次哈希 找到 对应的Segment段;                     1、首先确定段的位置，
+调用Segment中的get方法;                                调用Segment中的put方法：
+2、再次哈希找到对应的链表;                              2、加锁
+3、最后在链表中查找.                                   3、检查当前Segment数组中包含的HashEntry节点的个数，如果超过阈值就重新hash
+                                                   4、然后再次hash确定放的链表。
+                                                   5、在对应的链表中查找是否相同节点，如果有直接覆盖，如果没有将其放置链表尾部
+ 重哈希方式？
+ 只是对 Segments对象中的Hashentry数组进行重哈希。
+ 通过什么保证线程安全？
+ 分段锁 对整个桶数组进行了分割分段(Segment)，每一把锁只锁容器其中一部分数据，多线程访问容器里不同数据段的数据，就不会存在锁竞争，提高并发访问率。
+
+==>>  ConCurrentHashMap
+<jdk1.8> Node数组 + 链表 + 红黑树
+ -- 使用的是优化的synchronized 关键字同步代码块 和 CAS操作维护了并发。
+
+put方法：                                                          get 方法
+1、检查Key或者Value是否为null，                                      首先获取到Key的hash值，
+2、得到Kye的hash值                                                  然后找到对应的数组下标处的元素
+3、如果Node数组是空的，此时才初始化 initTable()，                       如果次元素是我们要找的，直接返回
+4、如果找的对应的下标的位置为空，直接new一个Node节点并放入， break；         如果次元素是null 返回null
+5、                                                               如果Key的值< 0 ,说明是红黑树
+6、如果对应头结点不为空， 进入同步代码块
+判断此头结点的hash值，是否大于零，大于零则说明是链表的头结点在链表中寻找，
+如果有相同hash值并且key相同，就直接覆盖，返回旧值 结束
+如果没有则就直接放置在链表的尾部
+此头节点的Hash值小于零，则说明此节点是红黑二叉树的根节点
+调用树的添加元素方法
+判断当前数组是否要转变为红黑树
+
+ === >> 其他内部类结构
+Node：
+    ConcurrentHashMap存储结构的基本单元，实现了Map.Entry接口，用于存储数据。它对value和next属性
+    设置了volatile同步锁(与JDK7的Segment相同)，它不允许调用setValue方法直接改变Node的value域，它增加了find方法辅助map.get()方法。
+TreeNode：
+    继承于Node，但是数据结构换成了二叉树结构，它是红黑树的数据的存储结构，用于红黑树中存储数据，当链表的节点数大于8时会转换成红黑树的结构，
+    他就是通过TreeNode作为存储结构代替Node来转换成黑红树。
+TreeBin：
+    从字面含义中可以理解为存储树形结构的容器，而树形结构就是指TreeNode，所以TreeBin就是封装TreeNode的容器，它提供转换黑红树的一些条件和锁的控制。
+ForwardingNode：
+    一个用于连接两个table的节点类。它包含一个nextTable指针，用于指向下一张表。而且这个节点的key value next指针全部为null，它的hash值为-1.
+    这里面定义的find的方法是从nextTable里进行查询节点，而不是以自身为头节点进行查找。
+Unsafe和CAS：
+    在ConcurrentHashMap中，随处可以看到U, 大量使用了U.compareAndSwapXXX的方法，这个方法是利用一个CAS算法实现无锁化的修改值的操作，
+    他可以大大降低锁代理的性能消耗。这个算法的基本思想就是不断地去比较当前内存中的变量值与你指定的一个变量值是否相等，如果相等，则接受你指定的
+    修改的值，否则拒绝你的操作。因为当前线程中的值已经不是最新的值，你的修改很可能会覆盖掉其他线程修改的结果。
+通过什么保证线程安全?
+    通过使用Synchroized关键字来同步代码块，而且只是在put方法中加锁，在get方法中没有加锁
+    在加锁时是使用头结点作为同步锁对象。，并且定义了三个原子操作方法:
+    static final <K,V> Node<K,V> tabAt(Node<K,V>[] tab, int i) {}
+    static final <K,V> boolean casTabAt(Node<K,V>[] tab, int i, Node<K,V> c, Node<K,V> v) {}
+    static final <K,V> void setTabAt(Node<K,V>[] tab, int i, Node<K,V> v) {}
+
+ List
+ Arraylist 底层使用的是 Object 数组；LinkedList 底层使用的是 双向链表 数据结构
