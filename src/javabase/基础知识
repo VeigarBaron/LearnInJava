@@ -1,4 +1,5 @@
 Java基础
+
     Java的泛型是伪泛型，这是因为Java在编译期间，所有的泛型信息都会被擦掉，这也就是通常所说类型擦除 。
     List<Integer> list = new ArrayList<>();
     list.add(12);
