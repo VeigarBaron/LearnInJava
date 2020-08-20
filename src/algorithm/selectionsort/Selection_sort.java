@@ -56,7 +56,7 @@ public class Selection_sort {
                 swap(arr, min, i);
         }
     }
-
+ 
     public static void main(String[] args) {
         /*int[] arr = {6, 4, 2, 1, 8, 3, 7, 9, 5};
         selectSort(arr);

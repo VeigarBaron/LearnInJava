@@ -1,3 +1,8 @@
+ List
+ Arraylist 底层使用的是 Object 数组；
+ LinkedList 底层使用的是 双向链表 数据结构
+
+
 java1.7: HashMap
     容量；阈值；加载因子；entry(K,V,HCode,Next)
     头插法；链表并发情况下环形并丢失数据；
@@ -64,5 +69,3 @@ Unsafe和CAS：
     static final <K,V> boolean casTabAt(Node<K,V>[] tab, int i, Node<K,V> c, Node<K,V> v) {}
     static final <K,V> void setTabAt(Node<K,V>[] tab, int i, Node<K,V> v) {}
 
- List
- Arraylist 底层使用的是 Object 数组；LinkedList 底层使用的是 双向链表 数据结构
