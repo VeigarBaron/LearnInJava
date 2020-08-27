@@ -14,33 +14,34 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TestJava extends TestFatherJava{
 
-    private int anInt = 1;
-    public String str = "strrrrr";
-    private static int anInt2 = 2;
-    public static String str2 = "strrrrr";
-
-    public static void method() {
-        // 不可以new
-        TestJava testJava = new TestJava();
-        System.out.println(testJava.anInt);
-        System.out.println(anInt2);
-        System.out.println(testJava.str);
-        System.out.println(str2);
-        System.out.println("qwer");
+    public boolean singleNumber(String s, String t) {
+        int n = s.length();
+        int[] mapS = new int[128];
+        int[] mapT = new int[128];
+        for (int i = 0; i < n; i++) {
+            char c1 = s.charAt(i);
+            char c2 = t.charAt(i);
+            //当前的映射值是否相同
+            if (mapS[c1] != mapT[c2]) {
+                System.out.println("f");
+                return false;
+            } else {
+                //是否已经修改过，修改过就不需要再处理
+                if (mapS[c1] == 0) {
+                    mapS[c1] = i + 1;
+                    mapT[c2] = i + 1;
+                }
+            }
+        }
+        System.out.println("t");
+        return true;
     }
 
     public static void main(String[] args) {
         TestJava testJava = new TestJava();
-        String object = testJava.strJava;
-        testJava.method();
-
-        System.out.println(object);
-        Map map = new HashMap();
-        ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap();
-        Hashtable hashtable = new Hashtable();
-        Collection collection;
-        short s1 = 1;
-        s1 += 1;
+        String a = "abadd";
+        String b = "cddee";
+        testJava.singleNumber(a,b);
 
     }
 }
