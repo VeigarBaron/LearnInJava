@@ -1,0 +1,66 @@
+
+数据库问题：
+    数据分片：如何使用最小的成本来实现关系型数据库的分库分表操作？
+    代理机制：如何基于普通的客户端工具对分库分表架构下的数据进行访问？
+    分布式事务：如何确保分布在不同数据库和表中同一份业务数据的一致性？
+    数据库的治理：如何确保分散在各个环境下的数据源和配置信息等数据库资源的一致性？
+
+目录结构：
+    第一部分：引入ShardingSphere
+    第二部分：ShardingSphere核心功能
+    第三部分：ShardingSphere源码解析之基础设施
+    第四部分：ShardingSphere源码解析之分片引擎
+    第五部分：ShardingSphere源码解析之分布式事务
+    第六部分：ShardingSphere源码解析之治理与集成
+
+1.分库分表的真正落地：
+    MySQL单表1千万条数据为最优；
+    水平分表，垂直分表；
+    分库算法：取模算法，范围限定算法，预定义算法；
+    读写分离：主（写）从（读）
+
+    分片（Sharding）
+    ·客户端分片：数据库的客户端实现分片，将分片处理的工作前置，客户端管理和维护着所有的分片逻辑，决定每次SQL执行
+        对应的目标数据库和数据表；
+        重写JDBC规范实现；
+    ·代理服务器分片：添加一层代理层；
+    ·分布式数据库：数据分片及分布式事务是内置的功能；
+
+2.ShardingSphere介绍：
+    是一种关系型数据库中间件
+    生态圈：Sharding-JDBC、Sharding-Proxy和Sharding-Sidecar
+3.ShardingSphere与JDBC规范的关系：
+    客户端分片的实现方式之一就是重写JDBC规范（嵌入分片机制）
+    JDBC：
+        DataSource是DriverManager连接数据库的一个中间层,目的是获取Connection对象
+        Statement/PreparedStatement(预编译)
+        1、创建DataSource
+        2、获取Connection
+        3、创建Statement
+        4、执行SQL语句
+        5、处理ResultSet
+        6、关闭资源对象
+    通过适配器模式的JDBC重写实现方案进行-接口兼容
+    ShardingDataSource、ShardingConnection、ShardingStatement、ShardingPreparedStatement
+4.业务中使用ShardingSphere的方式：
+    Java/Spring/SpringBoot
+    ORM框架集成
+5.ShardingSphere的配置体系：
+    行表达式：简化配置信息 ${} / $->{}
+
+    ShardingRuleConfiguration:
+        tableRuleConfigs:表分片规则列表---必须配置
+        bindTableGroups:绑定表规则列表
+        broadcastTables:广播表现规则列表
+        defaultDataSourceName:默认数据源
+        defaultDatabaseSharingStrategyConfig:默认分库策略
+        defaultTableShardingStrategyConfig:默认分表策略
+        defaultKeyGeneratorConfig:默认自增列生成器
+        masterSlaveRuleConfigs:读写分离规则
+    配置的4种方式：
+        Java代码配置
+        yaml配置
+        Spring
+        SpringBoot
+
+
