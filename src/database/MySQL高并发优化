@@ -1,0 +1,34 @@
+MySQL
+    单机单库
+    主从
+    分库分表
+    云数据库(云计算)
+
+    文件：
+        日志文件：
+            错误日志：show variables like '%log_err%'
+            通用查询日志：show variables like '%general%'
+            二进制日志:(bin log) 不记录对数据库数据不进行修改的操作
+                show variables like '%log_bin%' 二进制是否开启
+                show variables like '%binlog%'  二进制参数
+                show binary logs                查看日志文件
+            慢查询日志: 记录执行时间超时的语句，默认10秒种
+            show variables like '%slow_query%'
+        数据文件:
+            db.opt
+            frm：表结构等信息
+            myd、myi: MYISAM专用
+            ibd,IBDATA:InnoDB存放数据文件，包括索引，
+                独享空间使用ibd（每张表一个ibd文件）,
+                共享表空间使用IBDATA（所有表一起使用一个IBDATA 或多个，可以自行配置）
+            ibdata1文件：系统表空间数据文件，存储表元数据，Undo 日志等
+            ib_logfile0、ib_logfile1:redo 日志
+        配置文件:my.ini
+        pid文件、scoket文件：linux/Unix下的文件
+    Undo log机制:
+        执行一个delete，记录一个insert,执行一个update,记录一个反逻辑的update
+        产生：处理事务之前，产生日志
+        销毁：innodb将日志放到删除列表中， 后面通过后台线程，回收
+        作用： 事务的原子性，MVCC
+    Redo log和Bin log机制:
+
