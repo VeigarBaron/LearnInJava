@@ -16,7 +16,8 @@ Zookeeper: 掌握
 Redis、Netty、多线程模型、IO模型
 分布式
 Nginx、Springboot
-
+Hadoop ⽣态相关技术中的 HDFS、Storm、MapReduce、Hive、Hbase ：了解
+Python 基础、⼀些常⻅第三⽅库⽐如OpenCV、wxpy、wordcloud、matplotlib：熟悉
 
 SSH、SSM、Druid、Springboot、ActiveMq、Dubbo
 RabbitMQ、ZooKeeper、Nginx、Docker、WebService

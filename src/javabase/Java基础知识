@@ -1,9 +1,27 @@
 Java基础
     boolean;    char;   byte;   short;  int;    long;   float;  double;
+    在 Java 8 中，Integer 缓存池的大小默认为 -128~127。
+    在 Java 8 中，String 内部使用 char 数组存储数据。
+    在 Java 9 之后，String 类的实现改用 byte 数组存储字符串，同时使用 coder 来标识使用了哪种编码。
+    不可变的好处
+        1. 可以缓存 hash 值
+        2. String Pool 的需要
+        3. 安全性
+        4. 线程安全
+    String, StringBuffer and StringBuilder
+    1. 可变性
+        String 不可变
+        StringBuffer 和 StringBuilder 可变
+    2. 线程安全
+        String 不可变，因此是线程安全的
+        StringBuilder 不是线程安全的
+        StringBuffer 是线程安全的，内部使用 synchronized 进行同步
+    接口的成员（字段 + 方法）默认都是 public 的，并且不允许定义为 private 或者 protected。
+    接口的字段默认都是 static 和 final 的。
+
     构造器-重载、重写;
     调用子类->父类的特定构造方法-->（如果没有找到）父类的无参构造方法-->子类的构造方法->初始化
     封装、继承、多态;
-    String、StringBuilder、StringBuffer;
     接口和抽象类;
     线程、程序、进程: --> Java多线程
     IO: InputStream/Reader  :所有的输⼊流的基类，前者是字节输⼊流，后者是字符输⼊流。
