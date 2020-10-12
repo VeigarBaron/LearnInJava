@@ -13,20 +13,16 @@ public class Insertion_sort {
     }
 
     private static void insertionSort(int[] arr) {
-        if (arr == null)
-            return;
-        int j;
-        int temp;
+        int j, temp;
         for (int i = 1; i < arr.length; i++) {
             // 设置哨兵，拿出待插入的值
             temp = arr[i];
-            j = i;
+            j = i - 1;
             // 然后寻找正确插入的位置
-            while (j > 0 && arr[j - 1] > temp) {
-                arr[j] = arr[j - 1];
-                j--;
+            for (;j >= 0 && arr[j] > temp; j--){
+                arr[j + 1] = arr[j];
             }
-            arr[j] = temp;
+            arr[j + 1] = temp;
         }
     }
 

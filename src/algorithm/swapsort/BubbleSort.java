@@ -7,8 +7,7 @@ package algorithm.swapsort;
  */
 public class BubbleSort {
     // 对冒泡排序常见的改进方法是加入标志性变量bChange，用于标志某一趟排序过程中是否有数据交换。
-    public static void bubbleSort() {
-        int[] list = {1,24,13,94,45,36,27,68,49};
+    public static void bubbleSort(int[] list) {
         boolean bChange;    //交换标志
         for (int i = 0; i < list.length-1; i++){
             bChange = false;
