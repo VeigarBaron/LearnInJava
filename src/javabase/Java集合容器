@@ -2,6 +2,15 @@
  Arraylist 底层使用的是 Object 数组；
  LinkedList 底层使用的是 双向链表 数据结构
 
+如果你要使⽤线程安全的集合的话， java.util.concurrent 包中提供了很多并发容器供你使⽤：
+1. ConcurrentHashMap : 可以看作是线程安全的 HashMap
+2. CopyOnWriteArrayList :可以看作是线程安全的 ArrayList，在读多写少的场合性能⾮常
+好，远远好于 Vector .
+3. ConcurrentLinkedQueue :⾼效的并发队列，使⽤链表实现。可以看做⼀个线程安全的
+LinkedList ，这是⼀个⾮阻塞队列。
+4. BlockingQueue : 这是⼀个接⼝，JDK 内部通过链表、数组等⽅式实现了这个接⼝。表示阻塞
+队列，⾮常适合⽤于作为数据共享的通道。
+5. ConcurrentSkipListMap :跳表的实现。这是⼀个Map ，使⽤跳表的数据结构进⾏快速查找。
 
 java1.7: HashMap
     容量；阈值；加载因子；entry(K,V,HCode,Next)
