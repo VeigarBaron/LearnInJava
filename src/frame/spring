@@ -1,0 +1,27 @@
+特征: 核⼼容器、数据访问、Web、集成、测试模块、语言
+
+Spring Core : 基础,可以说 Spring 其他所有的功能都需要依赖于该类库。主要提供 IoC 依赖注⼊功能。
+Spring Aspects : 该模块为与AspectJ的集成提供⽀持。
+Spring AOP :提供了⾯向切⾯的编程实现。
+Spring JDBC : Java数据库连接。
+Spring JMS : Java消息服务。
+Spring ORM : ⽤于⽀持Hibernate等ORM⼯具。
+Spring Web : 为创建Web应⽤程序提供⽀持。
+
+IoC（Inverse of Control:控制反转）是⼀种设计思想，就是 将原本在程序中⼿动创建对象的控制
+权，交由Spring框架来管理。 IoC 在其他语⾔中也有应⽤，并⾮ Spring 特有。 IoC 容器是 Spring
+⽤来实现 IoC 的载体， IoC 容器实际上就是个Map（key，value）,Map 中存放的是各种对象。
+
+AOP(Aspect-Oriented Programming:⾯向切⾯编程)能够将那些与业务⽆关，却为业务模块所共同调⽤
+的逻辑或责任（例如事务处理、⽇志管理、权限控制等）封装起来，便于减少系统的重复代码，降低模
+块间的耦合度，并有利于未来的可拓展性和可维护性。
+
+Spring 中的 bean 的作⽤域有哪些?
+singleton : 唯⼀ bean 实例，Spring 中的 bean 默认都是单例的。
+prototype : 每次请求都会创建⼀个新的 bean 实例。
+request : 每⼀次HTTP请求都会产⽣⼀个新的bean，该bean仅在当前HTTP request内有效。
+session : 每⼀次HTTP请求都会产⽣⼀个新的 bean，该bean仅在当前 HTTP session 内有效。
+global-session： 全局session作⽤域，仅仅在基于portlet的web应⽤中才有意义，Spring5已
+经没有了。Portlet是能够⽣成语义代码(例如：HTML)⽚段的⼩型Java Web插件。它们基于
+portlet容器，可以像servlet⼀样处理HTTP请求。但是，与 servlet 不同，每个 portlet 都有
+不同的会话
