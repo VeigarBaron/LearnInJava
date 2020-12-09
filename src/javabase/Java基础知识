@@ -3,11 +3,9 @@ Java基础
     在 Java 8 中，Integer 缓存池的大小默认为 -128~127。
     在 Java 8 中，String 内部使用 char 数组存储数据。
     在 Java 9 之后，String 类的实现改用 byte 数组存储字符串，同时使用 coder 来标识使用了哪种编码。
-    不可变的好处
-        1. 可以缓存 hash 值
-        2. String Pool 的需要
-        3. 安全性
-        4. 线程安全
+    String不可变的好处
+        1. 可以缓存 hash 值          2. String Pool 的需要
+        3. 安全性                   4. 线程安全
     String, StringBuffer and StringBuilder
     1. 可变性
         String 不可变
@@ -26,6 +24,11 @@ Java基础
     线程、程序、进程: --> Java多线程
     IO: InputStream/Reader  :所有的输⼊流的基类，前者是字节输⼊流，后者是字符输⼊流。
         OutputStream/Writer :所有输出流的基类，前者是字节输出流，后者是字符输出流。
+Java 泛型（generics）:
+    泛型提供了编译时类型安全检测机制，该机制允许程序员在编译时检测到非法的类型。泛型的本质是参数化类型，也就是说所操作的数据类型被指定为一个参数。
+    Java的泛型是伪泛型，这是因为Java在编译期间，所有的泛型信息都会被擦掉，这也就是通常所说类型擦除
+    https://www.cnblogs.com/wuqinglong/p/9456193.html
+
 
 BIO,NIO,AIO 有什么区别?
 BIO (Blocking I/O): 同步阻塞 I/O 模式，数据的读取写入必须阻塞在一个线程内等待其完成。
