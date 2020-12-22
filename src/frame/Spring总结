@@ -6,6 +6,30 @@ Servlet:
                --   lib:(jar包)
                --   web.xml:(web配置文件)
 
+Spring = IOC + AOP + TX(事务)
+
+    AOP执行顺序：
+        1:@Before
+        2:@After
+        3:@Around
+        4:@AfterThrowing
+        5:@AfterReturning
+        Spring4 正常：环绕前->前置->环绕后->后置->返回后通知
+                异常：环绕前->前置->后置->异常通知
+        Spring5 正常：环绕前->前置->返回后通知->后置->环绕后
+                异常：环绕前->前置->异常通知->后置
+
+    循环依赖：
+        DefaultSingletonBeanRegistry
+        三级缓存 === 三个Map
+    一级  singletonObjects        --      ConcurrentHashMap   单例池，存放已经经历了完整生命周期的Bean对象
+    二级  earlySingletonObjects   --      HashMap             存放早期暴露出来的Bean对象，Bean生命周期未结束
+    三级  singletonFactories      --      HashMap             存放可以生成Bean的工厂
+
+
+
+
+
 
 
 
