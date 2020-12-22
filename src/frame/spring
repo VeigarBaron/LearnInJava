@@ -1,3 +1,16 @@
+Servlet:
+    Java Web:   (目录结构)
+            -- html/js/css/jsp...
+            -- WEB-INF:
+               --   class:(Java类)
+               --   lib:(jar包)
+               --   web.xml:(web配置文件)
+
+
+
+
+
+=================Spring=================
 特征: 核⼼容器、数据访问、Web、集成、测试模块、语言
 
 Spring Core : 基础,可以说 Spring 其他所有的功能都需要依赖于该类库。主要提供 IoC 依赖注⼊功能。
