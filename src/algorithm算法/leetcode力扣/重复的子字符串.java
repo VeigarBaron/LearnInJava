@@ -1,4 +1,4 @@
-package algorithm算法.快手LeetCode;
+package algorithm算法.leetcode力扣;
 
 /**
  * @author VeigarBaron

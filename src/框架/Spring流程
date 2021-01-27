@@ -1,0 +1,123 @@
+spring流程
+1. 初始化AnnotationBeanDefinitionReader
+• 读取spring内部的初始的 beanFactoryPostProcess 和 其他的几种 beanPostProcess。
+• 提供程序员注册bd（ register() ），主要是加了@Configuration的类。
+2. 初始化ClassPathBeanDefinitionScanner
+• 程序员能够在外部调用doScan()， 或者 继承该类可以重写scan规则用来动态扫描注解，需要注册到容器。
+• spring内部是自己重新new 新的对象来扫描。
+3. 执行register()方法，一般来说就是注册我们的配置类
+4. 执行refresh()，先初始化比如BeanFactory这类基础的容器。
+5. 执行invokeBeanFactoryPostProcessors()，主要的作用是扫描包和parse (类--->beanDefinition)
+• 执行BeanFactoryPostProcessor的子接口 BeanDefinitionRegistryPostProcessor 方法 postProcessBeanDefinitionRegistry（BeanDefinitionRegistry register）
+             作用：主要是扫描包找到合格的类，解析类
+ⅰ. 先执行程序员通过 context.add的
+ⅱ. 再执行spring内部的和程序员通过注解注册的 并且特殊的比如 实现了PriorityOrdered，Order
+ⅲ. 最后再执行其他的 BeanDefinitionRegistryPostProcessor
+• 再执行BeanFactoryPostProcessor接口 方法postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory)
+             作用：1. 和子接口一样 扫描包找到合格的类，解析类 2. 为@Configuration的类 做代理
+ⅰ. 先执行子接口中的方法
+ⅱ. 再执行程序员通过 context.add添加的
+ⅲ. 再执行spring内部和程序员通过注解注册的 并且特殊的比如 PriorityOrdered，Order
+ⅳ. 最后执行其他的 BeanFactoryPostProcessor
+• 他们在spring中唯一的实现类是ConfigurationClassPostProcessor
+• 将类变成beanDefinition的流程
+1. 从BeanDefinitionRegistry中获取所有的bd
+2. 判断是否该bd是否被解析过，主要根据bd中是否有full或者lite属性。
+3. 将未解的bd去，循环解析bd
+a. 先处理内部类
+b. 处理@PropertrySource 环境配置
+c. 处理@ComponentScan
+• 解析带有ComponentScan，会调用ClassPathBeanDefinitionScanner，根据包路径，和匹配规则扫描出合格类。
+d. 处理@Import
+ⅰ. 先处理 ImportSelect，执行selectImports(), 事务的初始化和aop的代理类型，是否传递代理 就是在这里做的。
+ⅱ. 然后处理 ImportBeanDefinitionRegistrar接口，会放到该bd的一个Map中，循环map统一去执行实现方法 registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry);
+ⅲ. 最后处理普通的类，同样会递归去解析该bd。aop
+e. 处理@ImportResource
+f. 处理@Bean
+g. 处理接口bd
+4. 然后将所有的合格的类，转换成bd，注册到beanDefinitionRegistry。
+6. 然后会注册beanPostProcessor，国际化等等，不是很重要
+7. 比较重要的，也是将bd变成bean的方法 finishBeanFactoryInitialization()，实例化非延迟的单例
+8. 一般来说首先getBeanDefinition之前，都要合并bd。
+9. 第一次getSingleton，从单例池拿是否存在，单例的第一次一般是不存在，并且会判断是否在正在创建bean的set集合中。
+singletonObjects 一级缓存，完整的bean
+singletonFactories 二级缓存，存的是代理bean工厂
+earlySingletonObjects 三级缓存，一般是是半成品的bean
+a. 如果存在，直接返回
+b. 如果不存在，并且不在正在创建bean的set集合中，直接返回null
+c. 如果不存在，并且在正在创建bean的set集合中。从三级缓存拿。
+ⅰ. 存在，直接三级缓存拿。
+ⅱ. 不存在，通过二级缓存，代理的bean工厂拿，获得该bean，然后将得到bean放到三级缓存中，移出二级缓存。（原因是生产bean工厂周期比较长的。）
+10. 第二次getSingleton
+a. 首先将beanName放到正在创建bean的set集合中，表示正在创建该bean
+b. 然后会调用二级缓存去获取bean，lambda延迟机制，就会调用表达式中，也就是createBean，这时候是正在获取代理bean工厂会走一个完整的bean 的生命周期。
+c. 然后从bean工厂获取bean。
+11. 第一次 BeanPostProcessor，是否需要代理bean。如果代理bean直接返回，不会走下面的流程。
+12. 第二次BeanPostProcessor，推断构造函数
+a. 首先推断构造函数数组
+ⅰ. 没提供构造函数=========设置构造函数数组为null
+ⅱ. 一个默认的构造函数======设置构造函数数组为null
+ⅲ. 一个不是默认的构造函数===设置构造函数数组为该构造函数
+ⅳ. 一个构造方法并且加了@Autowired====设置构造函数数组为该构造函数
+ⅴ. 多个模糊构造函数========设置构造函数数组为null
+ⅵ. 多个构造函数，有唯一加了@Autowired==设置构造函数数组为该构造函数
+ⅶ. 多个构造函数，多个@Autowired（required为false）===设置构造函数数组为多个@Autowired
+ⅷ. 提供多个构造函数，多个@Autowired（required为true）=== 抛异常
+b. 如果推断构造数组不为null 或者，自动注入类型为构造函数，或者设置了构造函数的属性（xml方式）等，还有一种传参数金来
+ⅰ. 推断构造函数，
+1. 只有个构造函数，最终被确定的构造函数，
+2. 有多个构造函数
+a. 优先修饰符最开放的，public>protected>Default>private
+b. 修饰符一样找属性最多的
+ⅱ. 推断参数，
+1. 首先找出所有候选的参数类型，实例化属性
+2. 然后类型是接口，那么判断是否开启宽松构造
+a. 未开启报错。
+b. 开启了，判断子类的差值（spring有个算法），默认差值是-1024。
+c. 差值低的为该参数，一样的丢到模糊集合中，随机取出。
+c. 构造函数数组为null，直接通过无参实例化构造函数。
+13. 第三次 BeanPostProcessor ,缓存了注入元素的信息
+injectionMetadataCache:  key: beanName或者类名  value：为解析出的属性（包括方法）集合 InjectionMetadata。
+InjectionMetadata：可以存放method 和 属性。类中有字段判断是否是属性 isField。
+checkedInitMethods： 存放  @PostConstruct 。
+checkedDestroyMethods：存放 @PreDestroy。
+a. AutowiredAnnotationBeanPostProcessor  主要解析加了 @Autowired 和 @Value 方法和属性。
+b. CommonAnnotationBeanPostProcessor  主要解析加了 @Resource属性。
+c. InitDestroyAnnotationBeanPostProcessor 主要解析加了 @PostConstruct 和 @PreDestroy方法
+d. 。。。其他的没有研究
+14. 第四次 BeanPostProcessor，生产代理工厂，作用是可以解决循环依赖
+a. 先判断是否允许循环依赖，可通过api修改属性，或者直接改源代码。
+b. 然后判断当前bean是否是正在创建的bean
+15. 调用populateBean 主要作用，注入属性。
+16. 第五次 BeanPostProcessor，控制是否需要属性注入，目前没什么作用。
+17. 再注入缓存的属性之前，先通过 自动注入模型
+a. byType byName，找到setter,注入。体现了@Autowired不是自动注入，而是手动注入。
+18. 第六次 BeanPostProcessor ，完成注解的属性填充 @Autowired @Resource
+a. 注入之前还是会再找一下是否有其他需要注入的属性和方法。
+b. 属性的调用属性注入方法，函数调用函数的注入方法。
+ⅰ. 通过属性的类型，从BeanDefinitionMap中找属性名称(接口则找找这个接口的子类),
+ⅱ. 然后判断我们当前需要注入的属性是不是这几个类型，得到候选的类型。
+ⅲ. 当有多个类型，再通过属性名称去推断出唯一候选的属性名。如果找到多个候选的属性名，抛异常。
+ⅳ. 只有唯一的属性名，通过类名去获取类型。
+ⅴ. 最终通 找到唯一匹配的beanName和类型去注入。当没有找到匹配的名称和类型，就会抛异常。
+c. 在注入的时候，有循环依赖的时候，会去先去实例化该属性。
+19. 第七次 BeanPostProcessor ，处理实现各种aware接口的重写方法 +  生命周期回调 执行@PostConstruct方法
+20. 执行 实现InitializingBean接口的，重写方法，和  xml 中的 init-method="xxx"方法。
+21. 第八次 BeanPostProcessor ，做aop代理。
+a. 判断是否需要做代理
+ⅰ. 找出所有的候选切面，比如 加了 @Aspect的类 ， 事务的切面
+ⅱ. 做匹配逻辑，比如根据切面的连接点表达式 或者 类中方法是否加了@Transaction去 判断当前类是否匹配出，合适的切面集合。
+ⅲ. 然后对匹配出的切面集合，做排序。
+ⅳ. 能匹配上说明就做代理
+b. 哪种代理（默认用JDK动态代理）
+ⅰ. 当代理工厂设置ProxyTargetClass为 true，则为CGLIB代理。
+ⅱ. 当目标对象为类，则也用为CGLIB代理。
+ⅲ. 只有proxyTarget为 false，并且为目标对象为接口，则用JDK动态代理
+c. 执行代理invokeHandler（这里主要是JDK的代理，invoke方法）
+ⅰ. 首先会进行普通方法的判断比如hashcode eques等等，没有就给代理类创建。不是很重要
+ⅱ. 然后判断是否需要将代理传递下去，就是绑定到 ThreadLocal中（在事务中，这个特别的重要）
+ⅲ. 获取执行链，也就是这个目标对象的通知集合。（也就是所有过滤器链，实现了MethodIntercept。）
+ⅳ. 执行过滤器执行链，类似于火炬传递。（事务的methodInterceptor也在这里会被调用）
+1. 判断通知是否执行完，没有执行完去，按顺序执行通知。
+2. 依次调用对应的通知，最终都会去回调到proceed（）方法。
+3. 最终执行完代理方法，就会调用本身的方法。比较特殊的是around是在通知里，执行被代理的目标方法。
