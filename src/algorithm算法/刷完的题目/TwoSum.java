@@ -1,4 +1,4 @@
-package algorithm算法.力扣100题;
+package algorithm算法.刷完的题目;
 
 import java.util.Arrays;
 import java.util.HashMap;
