@@ -1,7 +1,5 @@
 package algorithm算法.力扣100题;
 
-import algorithm算法.刷完的题目.ReverseList;
-
 /**
  * @author VeigarBaron
  * @date 2021/1/28 14:57
