@@ -1,4 +1,4 @@
-package algorithm算法.力扣100题;
+package algorithm算法.刷完的题目;
 
 /**
  * @author VeigarBaron
@@ -22,10 +22,12 @@ public class MaxDepth {
 
     public int maxDepth(TreeNode root) {
 
-        // 递归，深度
-        int depthL = 0;
-        int depthR = 0;
-
-        return 0;
+        if (root == null) {
+            return 0;
+        } else {
+            int leftHeight = maxDepth(root.left);
+            int rightHeight = maxDepth(root.right);
+            return Math.max(leftHeight, rightHeight) + 1;
+        }
     }
 }

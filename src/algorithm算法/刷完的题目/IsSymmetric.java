@@ -1,4 +1,4 @@
-package algorithm算法.力扣100题;
+package algorithm算法.刷完的题目;
 
 /**
  * @author VeigarBaron
@@ -22,13 +22,17 @@ public class IsSymmetric {
     }
 
     public boolean isSymmetric(TreeNode root) {
-
-        return false;
+        return check(root, root);
     }
 
-    public TreeNode symmetric(TreeNode root) {
-
-        return root;
+    public boolean check(TreeNode p, TreeNode q) {
+        if (p == null && q == null) {
+            return true;
+        }
+        if (p == null || q == null) {
+            return false;
+        }
+        return p.val == q.val && check(p.left, q.right) && check(p.right, q.left);
     }
 
 }
