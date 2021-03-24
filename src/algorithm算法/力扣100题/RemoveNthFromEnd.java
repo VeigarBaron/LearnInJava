@@ -17,24 +17,28 @@ public class RemoveNthFromEnd {
 
     public ListNode removeNthFromEnd(ListNode head, int n) {
 
+        if (head.next == null)
+            return null;
+
         int num = 1;
         ListNode pnext = head;
+        ListNode listNext = head;
         while (pnext.next != null) {
             pnext = pnext.next;
             ++num;
         }
 
-        int target = num - n;
+        int target = num - n + 1;
         int i = 0;
-        while (head.next != null) {
+        while (listNext.next != null) {
             i++;
-            pnext = pnext.next;
+            listNext = listNext.next;
             if (i == target) {
-                pnext.next = pnext.next.next;
+                listNext.next = listNext.next.next;
             }
 
         }
-        return head;
+        return listNext;
     }
 
     public static void main(String[] args) {
