@@ -16,7 +16,7 @@ public class ReverseList {
     }
 
     //code 题解= 思路同 reverseList()
-    public ListNode reverseList2(ListNode head) {
+    public ListNode reverseList(ListNode head) {
         ListNode prev = null;
         ListNode curr = head;
         while (curr != null) {
@@ -28,20 +28,6 @@ public class ReverseList {
         return prev;
     }
 
-    //code
-    public ListNode reverseList(ListNode head) {
-        ListNode prev = null;
-        while (head != null){
-            if (prev == null) {
-                prev = new ListNode(head.val, null);
-                head = head.next;
-                continue;
-            }
-            prev = new ListNode(head.val, prev);
-            head = head.next;
-        }
-        return prev;
-    }
 
     public static void main(String[] args) {
         ListNode listNode5 = new ListNode(5, null);
